@@ -55,7 +55,49 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 ```
 
-Setelah `wsl --install` selesai, buka aplikasi **Ubuntu** dari Start Menu atau jalankan `wsl` di PowerShell untuk konfigurasi awal (buat username & password Linux).
+Jika perintah `wsl` tidak dikenali (WSL belum terpasang) atau kamu menggunakan versi Windows yang belum menyediakan `wsl --install`, ikuti langkah singkat ini di PowerShell (jalankan sebagai Administrator):
+
+```powershell
+# 1) Aktifkan fitur Windows yang diperlukan
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+# 2) Restart Windows untuk menerapkan perubahan (jika diminta)
+# Setelah restart, buka PowerShell (Admin) lagi dan jalankan:
+
+# 3) Update WSL dan set default ke WSL2
+wsl --update
+wsl --set-default-version 2
+
+# 4) Install Ubuntu (bisa lewat Microsoft Store atau dengan perintah jika tersedia):
+wsl --install -d Ubuntu
+```
+
+Catatan: jika `wsl --install` masih tidak tersedia setelah langkah di atas, buka Microsoft Store lalu cari dan install "Ubuntu" secara manual, lalu jalankan distro tersebut sekali untuk menyelesaikan konfigurasi awal (username & password).
+
+Setelah `wsl --install -d Ubuntu` selesai, kamu bisa langsung masuk ke distro Ubuntu dengan menjalankan:
+
+```powershell
+wsl -d Ubuntu
+```
+
+Atau, jika lebih nyaman, kamu tetap bisa membuka aplikasi **Ubuntu** dari Start Menu atau menjalankan `wsl` di PowerShell untuk konfigurasi awal (buat username & password Linux).
+
+### Skrip bantu (opsional)
+
+Ada skrip PowerShell helper di `scripts/install-wsl-ubuntu.ps1` yang menggunakan `wsl.exe --install` dan menyediakan opsi untuk langsung memasuki Ubuntu setelah instalasi.
+
+Contoh penggunaan (PowerShell sebagai Administrator):
+
+```powershell
+# Jalankan interaktif (akan menampilkan instruksi jika perlu restart)
+.\scripts\install-wsl-ubuntu.ps1
+
+# Coba otomatis masuk ke Ubuntu setelah install (jika memungkinkan)
+.\scripts\install-wsl-ubuntu.ps1 -AutoEnter
+```
+
+Catatan: skrip ini memakai `wsl.exe --install` seperti contoh perintah di atas. Jika Windows-mu belum menyediakan `wsl.exe`, skrip akan mengaktifkan fitur yang diperlukan dan meminta restart.
 
 ---
 
