@@ -67,21 +67,32 @@ Buka terminal Ubuntu Anda dari menu Start untuk memulai instalasi Docker.
     Instal beberapa paket prasyarat agar Docker bisa ditambahkan dengan benar.
 
     ```bash
-    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+    sudo apt update
+    sudo apt install ca-certificates curl gnupg lsb-release -y
+
     ```
 
 3.  **Tambahkan Kunci GPG Resmi Docker.**
     Ini menambahkan kunci keamanan agar sistem Anda mempercayai repositori Docker.
 
     ```bash
-    curl -fsSL [https://download.docker.com/linux/ubuntu/gpg](https://download.docker.com/linux/ubuntu/gpg) | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
     ```
 
 4.  **Tambahkan Repositori Docker.**
     Tambahkan repositori resmi Docker ke dalam daftar sumber paket sistem Anda.
 
     ```bash
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] [https://download.docker.com/linux/ubuntu](https://download.docker.com/linux/ubuntu) $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    echo \
+    "deb [arch=$(dpkg --print-architecture) \
+    signed-by=/etc/apt/keyrings/docker.gpg] \
+    https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
     ```
 
 5.  **Instal Docker Engine.**
@@ -89,19 +100,12 @@ Buka terminal Ubuntu Anda dari menu Start untuk memulai instalasi Docker.
 
     ```bash
     sudo apt update
-    sudo apt install -y docker-ce docker-ce-cli containerd.io
+    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
     ```
 
-6.  **Tambahkan User ke Grup Docker (Sangat Penting!).**
-    Agar tidak perlu menggunakan `sudo` setiap kali menjalankan perintah Docker, tambahkan user Anda ke grup `docker`. Ganti `your-username` dengan username Linux Anda.
 
-    ```bash
-    sudo usermod -aG docker your-username
-    ```
-
-    **PENTING:** Anda harus **menutup dan membuka kembali terminal Ubuntu** agar perubahan ini diterapkan.
-
-7.  **Mulai dan Verifikasi Docker.**
+6.  **Mulai dan Verifikasi Docker.**
     Buka kembali terminal Ubuntu Anda.
     - Mulai layanan Docker:
       ```bash
